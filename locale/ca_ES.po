@@ -1,0 +1,83 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:internetdomain.renewal:"
+msgid "Not available Account Receivable at Party!"
+msgstr "No hi ha cap compte a cobrar del tercer."
+
+msgctxt "error:internetdomain.renewal:"
+msgid "Not available Payment Type!"
+msgstr "No es troben tipus de pagaments."
+
+msgctxt "error:internetdomain.renewal:"
+msgid "Party not available Account Receivable!"
+msgstr "El tercer no disposa un compte a cobrar."
+
+msgctxt "error:internetdomain.renewal:"
+msgid "Party not available Payment Type!"
+msgstr "No hi han tipus de pagament definits!"
+
+msgctxt "error:internetdomain.renewal:"
+msgid "Product not available Account Revenue!"
+msgstr "El producto no disposa un compte a cobrar."
+
+msgctxt "field:internetdomain.invoice.ask,analytic_account:"
+msgid "Analytic Account"
+msgstr "Compte analític"
+
+msgctxt "field:internetdomain.invoice.ask,analytic_accounts:"
+msgid "Analytic Accounts"
+msgstr "Comptes analítics"
+
+msgctxt "field:internetdomain.invoice.ask,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:internetdomain.invoice.ask,price:"
+msgid "Price"
+msgstr "Preu"
+
+msgctxt "field:internetdomain.invoice.ask,product:"
+msgid "Product"
+msgstr "Producte"
+
+msgctxt "field:internetdomain.renewal,invoice:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "help:internetdomain.invoice.ask,price:"
+msgid "Force price registration. If not, get product price"
+msgstr "Utilitza aquest preu. Si no s'usarà el preu del producte"
+
+msgctxt "model:internetdomain.invoice.ask,name:"
+msgid "Invoice Ask"
+msgstr "Generació factura"
+
+msgctxt "model:ir.action,name:wizard_invoice"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "model:res.group,name:group_internetdomain_invoice"
+msgid "Internet Domain Invoice"
+msgstr "Facturació dominis internet"
+
+msgctxt "view:internetdomain.invoice.ask:"
+msgid "Invoice Ask"
+msgstr "Generació factura"
+
+msgctxt "view:internetdomain.invoice.ask:"
+msgid "Select product to create invoice from domain renewal"
+msgstr "Selecciona el producte per crear una factura de la renovació del domini"
+
+msgctxt "view:internetdomain.renewal:"
+msgid "Create Invoice"
+msgstr "Crea factura"
+
+msgctxt "wizard_button:internetdomain.invoice,ask,end:"
+msgid "Cancel"
+msgstr "Cancel·la"
+
+msgctxt "wizard_button:internetdomain.invoice,ask,handle:"
+msgid "Ok"
+msgstr "Ok"

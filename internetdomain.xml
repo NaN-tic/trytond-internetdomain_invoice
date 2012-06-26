@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+    <data>
+        <!-- Groups -->
+        <record model="res.group" id="group_internetdomain_invoice">
+            <field name="name">Internet Domain Invoice</field>
+        </record>
+
+        <!-- wizard invoice -->
+        <record model="ir.ui.view" id="invoice_view_form">
+            <field name="model">internetdomain.invoice.ask</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Invoice Ask" col="2">
+                    <image name="tryton-dialog-information" xexpand="0"
+                        xfill="0"/>
+                    <label string="Select product to create invoice from domain renewal"
+                        id="choose"
+                        yalign="0.0" xalign="0.0" xexpand="1"/>
+                    <label name="product"/>
+                    <field name="product"/>
+                    <label name="price"/>
+                    <field name="price"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_invoice">
+            <field name="name">Invoice</field>
+            <field name="wiz_name">internetdomain.invoice</field>
+            <field name="model">internetdomain.renewal</field>
+        </record>
+        <!-- END wizard invoice -->
+
+        <record model="ir.ui.view" id="internetdomain_renewal_view_form">
+            <field name="model">internetdomain.renewal</field>
+            <field name="inherit" ref="internetdomain.internetdomain_renewal_view_form"/>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <data>
+                    <xpath
+                        expr="/form/notebook/page[@id='information']/field[@name='registrator']"
+                        position="after">
+                        <separator name="invoice" colspan="6"/>
+                        <label name="invoice"/>
+                        <field name="invoice"/>
+                        <button name="%(wizard_invoice)d"
+                            string="Create Invoice"
+                            states="{'invisible': Bool(Eval('invoice'))}"
+                            type="action"
+                            icon="tryton-go-next"/>
+                    </xpath>
+                </data>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>
