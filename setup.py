@@ -26,8 +26,7 @@ setup(name='trytond_internetdomain_invoice',
     author=info.get('author', 'Zikzakmedia'),
     author_email=info.get('email', 'zikzak@zikzakmedia.com'),
     url=info.get('website', 'http://www.zikzakmedia.com'),
-    download_url="http://downloads.tryton.org/" + \
-            info.get('version', '0.0.1').rsplit('.', 1)[0] + '/',
+    download_url="https://bitbucket.org/zikzakmedia/trytond-internetdomain_invoice",
     package_dir={'trytond.modules.internetdomain_invoice': '.'},
     packages=[
         'trytond.modules.internetdomain_invoice',
