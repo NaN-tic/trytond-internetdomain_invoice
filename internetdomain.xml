@@ -14,7 +14,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <![CDATA[
-                <form string="Invoice Ask" col="2">
+                <form string="Create Invoice" col="2">
                     <image name="tryton-dialog-information" xexpand="0"
                         xfill="0"/>
                     <label string="Select product to create invoice from domain renewal"
@@ -45,14 +45,10 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
                     <xpath
                         expr="/form/notebook/page[@id='information']/field[@name='registrator']"
                         position="after">
-                        <separator name="invoice" colspan="6"/>
+                        <separator string="Invoices" colspan="6" id="invoices"/>
                         <label name="invoice"/>
                         <field name="invoice"/>
-                        <button name="%(wizard_invoice)d"
-                            string="Create Invoice"
-                            states="{'invisible': Bool(Eval('invoice'))}"
-                            type="action"
-                            icon="tryton-go-next"/>
+                        <button name="create_invoice" string="Create Invoice" icon="tryton-go-next"/>
                     </xpath>
                 </data>
                 ]]>

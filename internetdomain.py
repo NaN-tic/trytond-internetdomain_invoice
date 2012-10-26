@@ -4,7 +4,7 @@
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.transaction import Transaction
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import If, Eval, Bool
 from trytond.wizard import Wizard, StateAction, StateView, StateTransition, \
     Button
@@ -12,21 +12,35 @@ from trytond.wizard import Wizard, StateAction, StateView, StateTransition, \
 from decimal import Decimal
 import datetime
 
-class Renewal(ModelSQL, ModelView):
+__all__ = ['Renewal', 'CreateInvoice', 'Invoice']
+__metaclass__ = PoolMeta
+
+class Renewal:
     'Renewal'
-    _name = 'internetdomain.renewal'
-    _description = __doc__
+    __name__ = 'internetdomain.renewal'
 
     invoice = fields.Many2One('account.invoice', 'Invoice', readonly=True)
 
-    def __init__(self):
-        super(Renewal, self).__init__()
-        self._error_messages.update({
+    @classmethod
+    def __setup__(cls):
+        super(Renewal, cls).__setup__()
+        cls._error_messages.update({
             'missing_payment_term': 'Not available Payment Type!',
             'missing_account_receivable': 'Party not available Account Receivable!',
             'missing_account_revenue': 'Product not available Account Revenue!',
             })
+        cls._buttons.update({
+            'create_invoice': {
+                'invisible': Eval('invoice', False),
+            },
+            })
 
+    @classmethod
+    @ModelView.button_action('internetdomain_invoice.wizard_invoice')
+    def create_invoice(cls, renewals):
+        pass
+
+    @classmethod
     def _get_invoice_description(self, renewal):
         '''
         Return description renewal
@@ -36,30 +50,31 @@ class Renewal(ModelSQL, ModelView):
         description = renewal.domain.name+' ('+str(renewal.date_renewal)+' / '+str(renewal.date_expire)+')'
         return description
 
+    @classmethod
     def _get_invoice_renewal(self, renewal):
         '''
         Return invoice values for renewal
         :param renewal: the BrowseRecord of the renewal
         :return: a dictionary with renewal fields as key and renewal values as value
         '''
-        party_obj = Pool().get('party.party')
-        journal_obj = Pool().get('account.journal')
-        payment_term_obj = Pool().get('account.invoice.payment_term')
+        Party = Pool().get('party.party')
+        Journal = Pool().get('account.journal')
+        PaymentTerm = Pool().get('account.invoice.payment_term')
     
-        journal_id = journal_obj.search([
+        journal_id = Journal.search([
             ('type', '=', 'expense'),
             ], limit=1)
         if journal_id:
             journal_id = journal_id[0]
 
-        payment_term_ids = payment_term_obj.search([('active','=',True)])
+        payment_term_ids = PaymentTerm.search([('active','=',True)])
         if not len(payment_term_ids) > 0:
             self.raise_user_error('missing_payment_term')
 
         if not renewal.domain.party.account_receivable:
             self.raise_user_error('missing_account_receivable')
 
-        invoice_address = party_obj.address_get(renewal.domain.party.id, type='invoice')
+        invoice_address = renewal.domain.party.address_get(type='invoice')
 
         res = {
             'company': renewal.domain.company.id,
@@ -74,58 +89,53 @@ class Renewal(ModelSQL, ModelView):
         }
         return res
 
-    def _get_invoice_line_renewal(self, renewal, product, price=None):
+    @classmethod
+    def _get_invoice_line_renewal(self, invoice, renewal, product, price=None):
         '''
         Return invoice line values for renewal
+        :param renewal: the BrowseRecord of the renewal
         :param product: the BrowseRecord of the product
         :param price: float
-        :param analytic_invoice: the BrowseRecord of the analytic_invoice
         :return: a dictionary with renewal fields as key and renewal values as value
         '''
-        invoice_line_obj = Pool().get('account.invoice.line')
-        analytic_account_obj = Pool().get('analytic_account.account')
+        InvoiceLine = Pool().get('account.invoice.line')
+        Product = Pool().get('product.product')
 
-        if not product.account_revenue:
+        if not product.account_revenue and not product.category.account_revenue:
             self.raise_user_error('missing_account_revenue')
-
-        vals = invoice_line_obj.on_change_product({
-            'product':product.id,
-            'party':renewal.domain.party.id,
-            })
 
         res = {
             'type': 'line',
             'quantity': 1,
-            'unit': vals['unit'],
+            'unit': 1,
             'product': product.id,
             'product_uom_category': product.category.id,
-            'account': product.account_revenue.id,
-            'unit_price': vals['unit_price'],
-            'taxes': [('add', vals['taxes'])],
-            'description': '%s - %s' % (product.name, self._get_invoice_description(renewal)),
+            'account': product.account_revenue and product.account_revenue.id \
+                or product.category.account_revenue.id,
+            'unit_price': product.list_price,
+            'taxes': [('add', product.customer_taxes)],
+            'description': '%s - %s' % (
+                    product.name, 
+                    self._get_invoice_description(renewal),
+                    ),
             'sequence': 1,
         }
-
         if price:
             res['unit_price'] = Decimal(price)
+        return res
 
-        return res 
 
-Renewal()
-
-class InvoiceAsk(ModelView):
-    'Invoice Ask'
-    _name = 'internetdomain.invoice.ask'
-    _description = __doc__
+class CreateInvoice(ModelView):
+    'Create Invoice'
+    __name__ = 'internetdomain.invoice.ask'
 
     product = fields.Many2One('product.product', 'Product', required=True)
     price = fields.Numeric('Price', digits=(16, 4), help='Force price registration. If not, get product price')
 
-InvoiceAsk()
 
 class Invoice(Wizard):
     'Invoice'
-    _name = 'internetdomain.invoice'
+    __name__ = 'internetdomain.invoice'
     start_state = 'ask'
     ask = StateView('internetdomain.invoice.ask',
         'internetdomain_invoice.invoice_view_form', [
@@ -134,33 +144,30 @@ class Invoice(Wizard):
             ])
     handle = StateTransition()
 
-    def transition_handle(self, session):
-        renewal_obj = Pool().get('internetdomain.renewal')
-        invoice_obj = Pool().get('account.invoice')
-        invoice_line_obj = Pool().get('account.invoice.line')
+    def transition_handle(self):
+        Renewal = Pool().get('internetdomain.renewal')
+        Invoice = Pool().get('account.invoice')
+        InvoiceLine = Pool().get('account.invoice.line')
 
-        renewal = renewal_obj.browse(Transaction().context['active_id'])
+        renewal = Renewal(Transaction().context['active_id'])
 
-        vals = renewal_obj._get_invoice_renewal(renewal)
-
-        with Transaction().set_user(0, set_context=True):
-            invoice_id = invoice_obj.create(vals)
-
-        product = session.ask.product
-        price = session.ask.price
-
-        vals = renewal_obj._get_invoice_line_renewal(renewal, product, price)
-        vals['invoice'] = invoice_id
-        with Transaction().set_user(0, set_context=True):
-            invoice_line_id = invoice_line_obj.create(vals)
+        vals = Renewal._get_invoice_renewal(renewal)
 
         with Transaction().set_user(0, set_context=True):
-            invoice_obj.update_taxes([invoice_id])
+            invoice = Invoice.create(vals)
 
-        renewal_obj.write(renewal.id, {
-            'invoice': invoice_id,
+        product = self.ask.product
+        price = self.ask.price
+
+        vals = Renewal._get_invoice_line_renewal(invoice, renewal, product, price)
+        vals['invoice'] = invoice.id
+        with Transaction().set_user(0, set_context=True):
+            invoice_line_id = InvoiceLine.create(vals)
+
+        with Transaction().set_user(0, set_context=True):
+            Invoice.update_taxes([invoice])
+
+        Renewal.write([renewal], {
+            'invoice': invoice.id,
         })
-
         return 'end'
-
-Invoice()
