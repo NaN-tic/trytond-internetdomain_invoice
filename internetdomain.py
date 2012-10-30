@@ -15,6 +15,19 @@ import datetime
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
 __metaclass__ = PoolMeta
 
+class Domain:
+    'Domain'
+    __name__ = 'internetdomain.domain'
+
+    def on_change_party(self):
+        address = None
+        changes = {}
+        if self.party:
+            address = self.party.address_get(type='invoice')
+        if address:
+            changes['party_address'] = address.id
+        return changes
+
 class Renewal:
     'Renewal'
     __name__ = 'internetdomain.renewal'
