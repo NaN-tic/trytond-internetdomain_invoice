@@ -117,15 +117,23 @@ class Renewal:
         if not product.account_revenue and not (product.category and product.category.account_revenue):
             self.raise_user_error('missing_account_revenue')
 
+        line = InvoiceLine()
+        line.unit = 1
+        line.quantity = 1
+        line.product = product
+        line.invoice = invoice
+        line.description = None
+        line.party = renewal.domain.party
+        values = line.on_change_product()
+
         res = {
             'type': 'line',
             'quantity': 1,
             'unit': 1,
             'product': product.id,
             'product_uom_category': product.category and product.category.id or None,
-            'account': product.account_revenue and product.account_revenue.id \
-                or product.category.account_revenue.id,
-            'unit_price': product.list_price,
+            'account': values['account'],
+            'unit_price': values['unit_price'],
             'taxes': [('add', product.customer_taxes)],
             'description': '%s - %s' % (
                     product.name, 
