@@ -114,7 +114,7 @@ class Renewal:
         InvoiceLine = Pool().get('account.invoice.line')
         Product = Pool().get('product.product')
 
-        if not product.account_revenue and not product.category.account_revenue:
+        if not product.account_revenue and not (product.category and product.category.account_revenue):
             self.raise_user_error('missing_account_revenue')
 
         res = {
@@ -122,7 +122,7 @@ class Renewal:
             'quantity': 1,
             'unit': 1,
             'product': product.id,
-            'product_uom_category': product.category.id,
+            'product_uom_category': product.category and product.category.id or None,
             'account': product.account_revenue and product.account_revenue.id \
                 or product.category.account_revenue.id,
             'unit_price': product.list_price,
