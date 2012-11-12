@@ -1,19 +1,17 @@
 #This file is part account_invoice_cancel module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains 
+#The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
-
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, fields
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import If, Eval, Bool
-from trytond.wizard import Wizard, StateAction, StateView, StateTransition, \
-    Button
-
+from trytond.pyson import Eval
+from trytond.wizard import Wizard, StateView, StateTransition, Button
 from decimal import Decimal
-import datetime
+
 
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
 __metaclass__ = PoolMeta
+
 
 class Domain:
     'Domain'
@@ -28,10 +26,10 @@ class Domain:
             changes['party_address'] = address.id
         return changes
 
+
 class Renewal:
     'Renewal'
     __name__ = 'internetdomain.renewal'
-
     invoice = fields.Many2One('account.invoice', 'Invoice', readonly=True)
 
     @classmethod
@@ -60,7 +58,9 @@ class Renewal:
         :param renewal: the BrowseRecord of the renewal
         :return: str
         '''
-        description = renewal.domain.name+' ('+str(renewal.date_renewal)+' / '+str(renewal.date_expire)+')'
+        description = renewal.domain.name + '' \
+            '(' + str(renewal.date_renewal) + ') ' \
+            '' + str(renewal.date_expire) + ')'
         return description
 
     @classmethod
@@ -68,19 +68,18 @@ class Renewal:
         '''
         Return invoice values for renewal
         :param renewal: the BrowseRecord of the renewal
-        :return: a dictionary with renewal fields as key and renewal values as value
+        :return: a dict with renewal fields as key and renewal values as value
         '''
-        Party = Pool().get('party.party')
         Journal = Pool().get('account.journal')
         PaymentTerm = Pool().get('account.invoice.payment_term')
-    
+
         journal_id = Journal.search([
             ('type', '=', 'expense'),
             ], limit=1)
         if journal_id:
             journal_id = journal_id[0]
 
-        payment_term_ids = PaymentTerm.search([('active','=',True)])
+        payment_term_ids = PaymentTerm.search([('active', '=', True)])
         if not len(payment_term_ids) > 0:
             self.raise_user_error('missing_payment_term')
 
@@ -94,10 +93,13 @@ class Renewal:
             'type': 'out_invoice',
             'journal': journal_id,
             'party': renewal.domain.party.id,
-            'invoice_address': invoice_address and invoice_address or renewal.domain.party_address,
+            'invoice_address': invoice_address and invoice_address or
+                renewal.domain.party_address,
             'currency': renewal.domain.company.currency.id,
             'account': renewal.domain.party.account_receivable.id,
-            'payment_term': renewal.domain.party.customer_payment_term and renewal.domain.party.customer_payment_term.id or payment_term_ids[0],
+            'payment_term': renewal.domain.party.customer_payment_term and
+                renewal.domain.party.customer_payment_term.id or
+                payment_term_ids[0],
             'description': self._get_invoice_description(renewal),
         }
         return res
@@ -109,12 +111,12 @@ class Renewal:
         :param renewal: the BrowseRecord of the renewal
         :param product: the BrowseRecord of the product
         :param price: float
-        :return: a dictionary with renewal fields as key and renewal values as value
+        :return: a dict with renewal fields as key and renewal values as value
         '''
         InvoiceLine = Pool().get('account.invoice.line')
-        Product = Pool().get('product.product')
 
-        if not product.account_revenue and not (product.category and product.category.account_revenue):
+        if not product.account_revenue and not (product.category and
+            product.category.account_revenue):
             self.raise_user_error('missing_account_revenue')
 
         line = InvoiceLine()
@@ -131,12 +133,13 @@ class Renewal:
             'quantity': 1,
             'unit': 1,
             'product': product.id,
-            'product_uom_category': product.category and product.category.id or None,
+            'product_uom_category': product.category and
+                product.category.id or None,
             'account': values['account'],
             'unit_price': values['unit_price'],
             'taxes': [('add', product.customer_taxes)],
             'description': '%s - %s' % (
-                    product.name, 
+                    product.name,
                     self._get_invoice_description(renewal),
                     ),
             'sequence': 1,
@@ -149,9 +152,9 @@ class Renewal:
 class CreateInvoice(ModelView):
     'Create Invoice'
     __name__ = 'internetdomain.invoice.ask'
-
     product = fields.Many2One('product.product', 'Product', required=True)
-    price = fields.Numeric('Price', digits=(16, 4), help='Force price registration. If not, get product price')
+    price = fields.Numeric('Price', digits=(16, 4),
+        help='Force price registration. If not, get product price')
 
 
 class Invoice(Wizard):
@@ -183,7 +186,7 @@ class Invoice(Wizard):
         vals = Renewal._get_invoice_line_renewal(invoice, renewal, product, price)
         vals['invoice'] = invoice.id
         with Transaction().set_user(0, set_context=True):
-            invoice_line_id = InvoiceLine.create(vals)
+            InvoiceLine.create(vals)
 
         with Transaction().set_user(0, set_context=True):
             Invoice.update_taxes([invoice])
