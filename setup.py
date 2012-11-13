@@ -27,20 +27,20 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytond_internetdomain_invoice',
+setup(name='trytonzz_internetdomain_invoice',
     version=info.get('version', '0.0.1'),
     description='Tryton module for internet domain renewals to invoice',
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-internetdomain_invoice",
-    package_dir={'trytond.modules.internetdomain_invoice': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytonzz-internetdomain_invoice",
+    package_dir={'trytonzz.modules.internetdomain_invoice': '.'},
     packages=[
-        'trytond.modules.internetdomain_invoice',
-        'trytond.modules.internetdomain_invoice.tests',
+        'trytonzz.modules.internetdomain_invoice',
+        'trytonzz.modules.internetdomain_invoice.tests',
     ],
     package_data={
-        'trytond.modules.internetdomain_invoice': info.get('xml', []) \
+        'trytonzz.modules.internetdomain_invoice': info.get('xml', []) \
                 + info.get('translation', []),
     },
     classifiers=[
@@ -63,9 +63,9 @@ setup(name='trytond_internetdomain_invoice',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytond.modules]
-    internetdomain_invoice = trytond.modules.internetdomain_invoice
+    [trytonzz.modules]
+    internetdomain_invoice = trytonzz.modules.internetdomain_invoice
     """,
     test_suite='tests',
-    test_loader='trytond.test_loader:Loader',
+    test_loader='trytonzz.test_loader:Loader',
 )
