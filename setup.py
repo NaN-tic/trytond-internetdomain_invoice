@@ -33,14 +33,14 @@ setup(name='trytonzz_internetdomain_invoice',
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytonzz-internetdomain_invoice",
-    package_dir={'trytonzz.modules.internetdomain_invoice': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytond-internetdomain_invoice",
+    package_dir={'trytond.modules.internetdomain_invoice': '.'},
     packages=[
-        'trytonzz.modules.internetdomain_invoice',
-        'trytonzz.modules.internetdomain_invoice.tests',
+        'trytond.modules.internetdomain_invoice',
+        'trytond.modules.internetdomain_invoice.tests',
     ],
     package_data={
-        'trytonzz.modules.internetdomain_invoice': info.get('xml', []) \
+        'trytond.modules.internetdomain_invoice': info.get('xml', []) \
                 + info.get('translation', []),
     },
     classifiers=[
@@ -63,9 +63,9 @@ setup(name='trytonzz_internetdomain_invoice',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytonzz.modules]
-    internetdomain_invoice = trytonzz.modules.internetdomain_invoice
+    [trytond.modules]
+    internetdomain_invoice = trytond.modules.internetdomain_invoice
     """,
     test_suite='tests',
-    test_loader='trytonzz.test_loader:Loader',
+    test_loader='trytond.test_loader:Loader',
 )
