@@ -7,6 +7,10 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <record model="res.group" id="group_internetdomain_invoice">
             <field name="name">Internet Domain Invoice</field>
         </record>
+        <record model="res.user-res.group" id="user_admin_group_internetdomain_invoice">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_internetdomain_invoice"/>
+        </record>
 
         <!-- wizard invoice -->
         <record model="ir.ui.view" id="invoice_view_form">
