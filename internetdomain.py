@@ -178,7 +178,7 @@ class Invoice(Wizard):
         vals = Renewal._get_invoice_renewal(renewal)
 
         with Transaction().set_user(0, set_context=True):
-            invoice = Invoice.create(vals)
+            invoice = Invoice.create([vals])[0]
 
         product = self.ask.product
         price = self.ask.price
@@ -186,7 +186,7 @@ class Invoice(Wizard):
         vals = Renewal._get_invoice_line_renewal(invoice, renewal, product, price)
         vals['invoice'] = invoice.id
         with Transaction().set_user(0, set_context=True):
-            InvoiceLine.create(vals)
+            InvoiceLine.create([vals])
 
         with Transaction().set_user(0, set_context=True):
             Invoice.update_taxes([invoice])
