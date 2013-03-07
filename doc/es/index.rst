@@ -4,8 +4,8 @@ Facturación dominios internet
 
 Facturación de dominios de internet
 
-Módulos que dependen
-====================
+Módulos de los que depende
+==========================
 
 Instalados
 ----------
