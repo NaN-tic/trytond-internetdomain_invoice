@@ -1,21 +1,8 @@
-=============================
-Facturación dominios internet
-=============================
+====================================================
+Factura de las renovaciones de los dominios internet
+====================================================
 
-Facturación de dominios de internet
-
-Módulos de los que depende
-==========================
-
-Instalados
-----------
-
-.. toctree::
-   :maxdepth: 1
-
-   /account_invoice/index
-   /analytic_account/index
-   /internetdomain/index
+Facturación de las renovaciones de los dominios de internet
 
 Dependencias
 ------------
