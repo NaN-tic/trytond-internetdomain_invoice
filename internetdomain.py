@@ -137,7 +137,7 @@ class Renewal:
                 product.category.id or None,
             'account': values['account'],
             'unit_price': values['unit_price'],
-            'taxes': [('add', product.customer_taxes)],
+            'taxes': [('add', product.customer_taxes_used)],
             'description': '%s - %s' % (
                     product.name,
                     self._get_invoice_description(renewal),
