@@ -1,42 +1,14 @@
 # 
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Raimon Esteve <resteve@zikzakmedia.com>\n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
+msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:internetdomain.renewal:"
-msgid "Not available Account Receivable at Party!"
-msgstr "No se encuentra una cuenta a cobrar del tercero."
+msgid "A payment term has not been defined."
+msgstr "No se ha definido un plazo de pago."
 
 msgctxt "error:internetdomain.renewal:"
-msgid "Not available Payment Type!"
-msgstr "Los tipos de pago no están defenidos."
-
-msgctxt "error:internetdomain.renewal:"
-msgid "Party not available Account Receivable!"
-msgstr "El tercero no dispone de una cuenta a cobrar."
-
-msgctxt "error:internetdomain.renewal:"
-msgid "Party not available Payment Type!"
-msgstr "No hay tipos de pagos en el tercero."
-
-msgctxt "error:internetdomain.renewal:"
-msgid "Product not available Account Revenue!"
-msgstr "No hay ninguna cuenta a cobrar en el producto."
-
-msgctxt "field:internetdomain.invoice.ask,analytic_account:"
-msgid "Analytic Account"
-msgstr "Cuenta analítica"
-
-msgctxt "field:internetdomain.invoice.ask,analytic_accounts:"
-msgid "Analytic Accounts"
-msgstr "Cuentas analíticas"
+msgid "Party \"%s\" (%s) must have a receivable account."
+msgstr "El tercero \"%s\" (%s) debe tener una cuenta a cobrar."
 
 msgctxt "field:internetdomain.invoice.ask,id:"
 msgid "ID"
@@ -55,12 +27,16 @@ msgid "Invoice"
 msgstr "Factura"
 
 msgctxt "help:internetdomain.invoice.ask,price:"
-msgid "Force price registration. If not, get product price"
-msgstr "Se usará este precio. Si no, se usará el precio del producto."
+msgid ""
+"It will be used as the invoice line price. If is not filled, the sale price "
+"of the product will be used instead."
+msgstr ""
+"Se usará como precio de la línea de factura. Si no se rellena, se usará el "
+"precio de venta del producto."
 
 msgctxt "model:internetdomain.invoice.ask,name:"
-msgid "Invoice Ask"
-msgstr "Generación factura"
+msgid "Create Invoice"
+msgstr "Crear factura"
 
 msgctxt "model:ir.action,name:wizard_invoice"
 msgid "Invoice"
@@ -71,22 +47,27 @@ msgid "Internet Domain Invoice"
 msgstr "Facturación dominios internet"
 
 msgctxt "view:internetdomain.invoice.ask:"
-msgid "Invoice Ask"
-msgstr "Generación factura"
+msgid "Create Invoice"
+msgstr "Crear factura"
 
 msgctxt "view:internetdomain.invoice.ask:"
 msgid "Select product to create invoice from domain renewal"
-msgstr "Seleccione el producto para la generación de la factura a partir de la renovación del dominio"
+msgstr ""
+"Seleccione el producto para la creación de la factura a partir de la "
+"renovación del dominio"
 
 msgctxt "view:internetdomain.renewal:"
 msgid "Create Invoice"
 msgstr "Crear factura"
 
+msgctxt "view:internetdomain.renewal:"
+msgid "Invoices"
+msgstr "Facturas"
+
 msgctxt "wizard_button:internetdomain.invoice,ask,end:"
 msgid "Cancel"
-msgstr "Cancela"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:internetdomain.invoice,ask,handle:"
 msgid "Ok"
-msgstr "Ok"
-
+msgstr "Aceptar"

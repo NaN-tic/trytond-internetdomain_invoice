@@ -36,31 +36,30 @@ class Renewal:
     def __setup__(cls):
         super(Renewal, cls).__setup__()
         cls._error_messages.update({
-            'missing_payment_term': 'Not available Payment Type!',
-            'missing_account_receivable': 'Party not available Account Receivable!',
-            'missing_account_revenue': 'Product not available Account Revenue!',
-            })
+                'missing_payment_term': 'A payment term has not been defined.',
+                'missing_account_receivable': 'Party "%s" (%s) must have a '
+                    'receivable account.',
+                })
         cls._buttons.update({
-            'create_invoice': {
-                'invisible': Eval('invoice', False),
-            },
-            })
+                'create_invoice': {
+                    'invisible': Eval('invoice', False),
+                },
+                })
 
     @classmethod
     @ModelView.button_action('internetdomain_invoice.wizard_invoice')
     def create_invoice(cls, renewals):
         pass
 
-    @classmethod
-    def _get_invoice_description(self, renewal):
+    def _get_invoice_description(self):
         '''
-        Return description renewal
+        Return the renewal description
         :param renewal: the BrowseRecord of the renewal
         :return: str
         '''
-        description = renewal.domain.name + '' \
-            '(' + str(renewal.date_renewal) + ') ' \
-            '' + str(renewal.date_expire) + ')'
+        description = (self.domain.name +
+            ' (' + str(self.date_renewal) +
+            ' / ' + str(self.date_expire) + ')')
         return description
 
     @classmethod
@@ -83,24 +82,25 @@ class Renewal:
         if not len(payment_term_ids) > 0:
             self.raise_user_error('missing_payment_term')
 
-        if not renewal.domain.party.account_receivable:
-            self.raise_user_error('missing_account_receivable')
+        party = renewal.domain.party
+        if not party.account_receivable:
+            self.raise_user_error('missing_account_receivable',
+                error_args=(party.name, party))
 
-        invoice_address = renewal.domain.party.address_get(type='invoice')
+        invoice_address = party.address_get(type='invoice')
 
         res = {
             'company': renewal.domain.company.id,
             'type': 'out_invoice',
             'journal': journal_id,
-            'party': renewal.domain.party.id,
+            'party': party.id,
             'invoice_address': invoice_address and invoice_address or
                 renewal.domain.party_address,
             'currency': renewal.domain.company.currency.id,
-            'account': renewal.domain.party.account_receivable.id,
-            'payment_term': renewal.domain.party.customer_payment_term and
-                renewal.domain.party.customer_payment_term.id or
-                payment_term_ids[0],
-            'description': self._get_invoice_description(renewal),
+            'account': party.account_receivable.id,
+            'payment_term': party.customer_payment_term and
+                party.customer_payment_term.id or payment_term_ids[0],
+            'description': renewal._get_invoice_description(),
         }
         return res
 
@@ -115,9 +115,8 @@ class Renewal:
         '''
         InvoiceLine = Pool().get('account.invoice.line')
 
-        if not product.account_revenue and not (product.category and
-            product.category.account_revenue):
-            self.raise_user_error('missing_account_revenue')
+        # Test if a revenue account exists for the product
+        product.account_revenue_used
 
         line = InvoiceLine()
         line.unit = 1
@@ -140,7 +139,7 @@ class Renewal:
             'taxes': [('add', product.customer_taxes_used)],
             'description': '%s - %s' % (
                     product.name,
-                    self._get_invoice_description(renewal),
+                    renewal._get_invoice_description(),
                     ),
             'sequence': 1,
         }
@@ -154,7 +153,8 @@ class CreateInvoice(ModelView):
     __name__ = 'internetdomain.invoice.ask'
     product = fields.Many2One('product.product', 'Product', required=True)
     price = fields.Numeric('Price', digits=(16, 4),
-        help='Force price registration. If not, get product price')
+        help=('It will be used as the invoice line price. If is not filled, '
+            'the sale price of the product will be used instead.'))
 
 
 class Invoice(Wizard):
