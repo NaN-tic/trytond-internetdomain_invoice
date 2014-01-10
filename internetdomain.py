@@ -8,13 +8,11 @@ from trytond.pyson import Eval
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from decimal import Decimal
 
-
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
 __metaclass__ = PoolMeta
 
 
 class Domain:
-    'Domain'
     __name__ = 'internetdomain.domain'
 
     def on_change_party(self):
@@ -28,7 +26,6 @@ class Domain:
 
 
 class Renewal:
-    'Renewal'
     __name__ = 'internetdomain.renewal'
     invoice = fields.Many2One('account.invoice', 'Invoice', readonly=True)
 
@@ -45,6 +42,14 @@ class Renewal:
                     'invisible': Eval('invoice', False),
                 },
                 })
+
+    @classmethod
+    def copy(cls, renewals, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.setdefault('invoice', None)
+        return super(Renewal, cls).copy(renewals, default=default)
 
     @classmethod
     @ModelView.button_action('internetdomain_invoice.wizard_invoice')
