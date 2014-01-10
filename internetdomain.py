@@ -109,6 +109,7 @@ class Invoice(Wizard):
         #Create Invoice line
         quantity = 1
         line = InvoiceLine.get_invoice_line_data(invoice, product, quantity)
+        line.origin = renewal
         if price:
             line.unit_price = price
         with Transaction().set_user(0, set_context=True):
