@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- This file is part internetdomain_invoice module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<data>
+    <xpath
+        expr="/form/notebook/page[@id='information']/field[@name='registrator']"
+        position="after">
+        <separator string="Invoices" colspan="6" id="invoices"/>
+        <label name="invoice"/>
+        <field name="invoice"/>
+        <button name="create_invoice" string="Create Invoice" icon="tryton-go-next"/>
+    </xpath>
+</data>

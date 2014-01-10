@@ -16,21 +16,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <record model="ir.ui.view" id="invoice_view_form">
             <field name="model">internetdomain.invoice.ask</field>
             <field name="type">form</field>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <form string="Create Invoice" col="2">
-                    <image name="tryton-dialog-information" xexpand="0"
-                        xfill="0"/>
-                    <label string="Select product to create invoice from domain renewal"
-                        id="choose"
-                        yalign="0.0" xalign="0.0" xexpand="1"/>
-                    <label name="product"/>
-                    <field name="product"/>
-                    <label name="price"/>
-                    <field name="price"/>
-                </form>
-                ]]>
-            </field>
+            <field name="name">invoice_form</field>
         </record>
 
         <record model="ir.action.wizard" id="wizard_invoice">
@@ -43,34 +29,13 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
         <record model="ir.ui.view" id="internetdomain_renewal_view_form">
             <field name="model">internetdomain.renewal</field>
             <field name="inherit" ref="internetdomain.internetdomain_renewal_view_form"/>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <data>
-                    <xpath
-                        expr="/form/notebook/page[@id='information']/field[@name='registrator']"
-                        position="after">
-                        <separator string="Invoices" colspan="6" id="invoices"/>
-                        <label name="invoice"/>
-                        <field name="invoice"/>
-                        <button name="create_invoice" string="Create Invoice" icon="tryton-go-next"/>
-                    </xpath>
-                </data>
-                ]]>
-            </field>
+            <field name="name">renewal_form</field>
         </record>
 
         <record model="ir.ui.view" id="internetdomain_renewal_view_tree">
             <field name="model">internetdomain.renewal</field>
             <field name="inherit" ref="internetdomain.internetdomain_renewal_view_tree"/>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <data>
-                    <xpath expr="/tree" position="inside">
-                        <field name="invoice" />
-                    </xpath>
-                </data>
-                ]]>
-            </field>
+            <field name="name">renewal_tree</field>
         </record>
 
         <record model="ir.model.access" id="access_internetdomain_invoice">
