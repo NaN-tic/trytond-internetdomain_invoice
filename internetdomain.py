@@ -7,6 +7,8 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from decimal import Decimal
+from trytond.config import CONFIG
+DIGITS = int(CONFIG.get('unit_price_digits', 4))
 
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
 __metaclass__ = PoolMeta
@@ -72,7 +74,7 @@ class CreateInvoice(ModelView):
     'Create Invoice'
     __name__ = 'internetdomain.invoice.ask'
     product = fields.Many2One('product.product', 'Product', required=True)
-    price = fields.Numeric('Price', digits=(16, 4),
+    price = fields.Numeric('Price', digits=(16, DIGITS),
         help=('It will be used as the invoice line price. If is not filled, '
             'the sale price of the product will be used instead.'))
 
