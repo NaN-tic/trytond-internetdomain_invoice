@@ -6,7 +6,6 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.wizard import Wizard, StateView, StateTransition, Button
-from decimal import Decimal
 from trytond.config import CONFIG
 DIGITS = int(CONFIG.get('unit_price_digits', 4))
 
