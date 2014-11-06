@@ -6,8 +6,8 @@ from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.wizard import Wizard, StateView, StateTransition, Button
-from trytond.config import CONFIG
-DIGITS = int(CONFIG.get('unit_price_digits', 4))
+from trytond.config import config
+DIGITS = int(config.get('digits', 'unit_price_digits', 4))
 
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
 __metaclass__ = PoolMeta
