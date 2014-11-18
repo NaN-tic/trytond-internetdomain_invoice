@@ -10,7 +10,7 @@ Prerequisites
 Installation
 ------------
 
-Once you've downloaded and unpacked the trytond_helloword source release, enter the
+Once you've downloaded and unpacked the trytond_internetdomain_invoice source release, enter the
 directory where the archive was unpacked, and run:
 
     python setup.py install
