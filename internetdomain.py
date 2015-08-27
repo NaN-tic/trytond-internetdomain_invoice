@@ -17,14 +17,11 @@ DIGITS = config_.getint('product', 'price_decimal', default=4)
 class Domain:
     __name__ = 'internetdomain.domain'
 
+    @fields.depends('party', 'party_address')
     def on_change_party(self):
-        address = None
-        changes = {}
+        super(Domain, self).on_change_party()
         if self.party:
-            address = self.party.address_get(type='invoice')
-        if address:
-            changes['party_address'] = address.id
-        return changes
+            self.party.address_get(type='invoice')
 
 
 class Renewal:
