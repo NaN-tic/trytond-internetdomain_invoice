@@ -26,7 +26,6 @@ msgctxt "field:internetdomain.renewal,invoice:"
 msgid "Invoice"
 msgstr "Factura"
 
-#, fuzzy
 msgctxt "help:internetdomain.invoice.ask,price:"
 msgid ""
 "It will be used as the invoice line price. If is not filled, the sale price "
