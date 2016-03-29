@@ -9,12 +9,12 @@ from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond.config import config as config_
 
 __all__ = ['Renewal', 'CreateInvoice', 'Invoice']
-__metaclass__ = PoolMeta
 
 DIGITS = config_.getint('product', 'price_decimal', default=4)
 
 
 class Domain:
+    __metaclass__ = PoolMeta
     __name__ = 'internetdomain.domain'
 
     @fields.depends('party', 'party_address')
@@ -25,6 +25,7 @@ class Domain:
 
 
 class Renewal:
+    __metaclass__ = PoolMeta
     __name__ = 'internetdomain.renewal'
     invoice = fields.Many2One('account.invoice', 'Invoice', readonly=True)
 
