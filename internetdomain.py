@@ -101,7 +101,7 @@ class Invoice(Wizard):
         #Create Invoice
         party = renewal.domain.party
         description = renewal._get_invoice_description()
-        invoice_type = 'out_invoice'
+        invoice_type = 'out'
         invoice = Invoice.get_invoice_data(party, description, invoice_type)
         with Transaction().set_user(0, set_context=True):
             invoice.save()
